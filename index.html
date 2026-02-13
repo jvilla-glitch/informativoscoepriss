@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Solicitudes Estatales</title>
+    
+    <!-- ===================== SEGURIDAD: Content Security Policy ===================== -->
+    <!-- Previene XSS y ataques de inyección de código -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' https://pagead2.googlesyndication.com 'unsafe-inline'; 
+                   frame-src https://drive.google.com https://www.youtube.com https://docs.google.com; 
+                   style-src 'self' 'unsafe-inline';
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://pagead2.googlesyndication.com;">
+    
+    <!-- ===================== SEGURIDAD: Protección contra Clickjacking ===================== -->
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    
+    <!-- ===================== SEGURIDAD: Prevenir MIME type sniffing ===================== -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- ===================== SEGURIDAD: Política de referrer ===================== -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>Gestión de Solicitudes Estatales - COEPRISS</title>
+    
     <style>
         * {
             margin: 0;
@@ -446,10 +467,20 @@
             .tramite-nombre { font-size: 1em; }
         }
     </style>
+    
+    <!-- ===================== SEGURIDAD: Google AdSense con crossorigin ===================== -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3617160493965334"
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- ===================== SEGURIDAD: Forzar HTTPS ===================== -->
+    <script>
+        // Redirigir a HTTPS si no estamos en localhost
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+        }
+    </script>
+
     <div class="background-shapes">
         <div class="shape"></div>
         <div class="shape"></div>
@@ -503,11 +534,13 @@
         </div>
 
         <footer>
-            <p>© 2025 Josué Villa | Todos los derechos reservados, <i>Ideas que inspiran, resultados que trascienden</i></p>
+            <p>© 2025 COEPRISS Sinaloa | Comisión Estatal para la Protección contra Riesgos Sanitarios</p>
+            <p>VTECHSOLUTIONS, <i>Ideas que inspiran, resultados que trascienden</i></p>
         </footer>
     </div>
 
     <script>
+        // ===================== CONFIGURACIÓN DE DATOS =====================
         const tramites = [
             {
                 id: 1,
@@ -679,49 +712,92 @@
                 informacion: "Documento oficial con los costos actualizados de todos los trámites estatales."
             },
             {
-    id: 13,
-    nombre: "Denuncias Sanitarias",
-    icono: "📢",
-    descripcion: "Sistema de denuncias por irregularidades sanitarias",
-    pdfUrl: "https://drive.google.com/file/d/1i5aLjfvknmhI6Ts-Lfuabpm6uyRa2e1U/preview",
-    requisitos: [
-        "Identificación oficial del denunciante (opcional si desea mantener el anonimato).",
-        "Descripción detallada de los hechos.",
-        "Dirección exacta del establecimiento o lugar donde ocurren las irregularidades.",
-        "Evidencias fotográficas o documentales (si se cuenta con ellas).",
-        "Datos de contacto para seguimiento (opcional)."
-    ],
-    informacion: "Sistema para reportar irregularidades sanitarias en establecimientos o situaciones que representen un riesgo para la salud pública. Las denuncias pueden ser anónimas y serán atendidas por personal de COEPRISS."
-},
-{
-    id: 14,
-    nombre: "AutoEvaluacion edificio libre de humo de tabaco",
-    icono: "🚭",
-    descripcion: "formato de Autoevaluacion",
-    pdfUrl: "https://drive.google.com/file/d/1x8g6ohQJ5bRaY44L1nDnflZOC770vVh0/preview",
-    requisitos: [
-        "Formato debidamente llenado.",
-        "Formato debidamente firmado."
-    ],
-    informacion: "De acuerdo al Reglamento de la Ley General para el Control del Tabaco."
-},
-{
-    id: 15,
-    nombre: "Visita de Verificacion",
-    icono: "🔍",
-    descripcion: "Solicitud de Visita de Verificacion",
-    pdfUrl: "https://drive.google.com/file/d/1n9zbONqFiyBU86HQEkILzOXtEvy-iYhH/preview",
-    requisitos: [
-        "Copia del documento que acredite al Representante Legal (sí aplica).",
-        "Copia de INE del Propietario.",
-        "Original y 2 copias de recibo de pago (Tarifa Vigente). VIGENCIA DE COSTO DEL 01 DE FEBRERO DEL AÑO EN CURSO AL 31 DE ENERO DEL AÑO POSTERIOR."
-    ],
-    informacion: "Solicitud para Visita de Verificación Sanitaria."
-}
+                id: 13,
+                nombre: "Denuncias Sanitarias",
+                icono: "📢",
+                descripcion: "Sistema de denuncias por irregularidades sanitarias",
+                pdfUrl: "https://drive.google.com/file/d/1i5aLjfvknmhI6Ts-Lfuabpm6uyRa2e1U/preview",
+                requisitos: [
+                    "Identificación oficial del denunciante (opcional si desea mantener el anonimato).",
+                    "Descripción detallada de los hechos.",
+                    "Dirección exacta del establecimiento o lugar donde ocurren las irregularidades.",
+                    "Evidencias fotográficas o documentales (si se cuenta con ellas).",
+                    "Datos de contacto para seguimiento (opcional)."
+                ],
+                informacion: "Sistema para reportar irregularidades sanitarias en establecimientos o situaciones que representen un riesgo para la salud pública. Las denuncias pueden ser anónimas y serán atendidas por personal de COEPRISS."
+            },
+            {
+                id: 14,
+                nombre: "AutoEvaluacion edificio libre de humo de tabaco",
+                icono: "🚭",
+                descripcion: "formato de Autoevaluacion",
+                pdfUrl: "https://drive.google.com/file/d/1x8g6ohQJ5bRaY44L1nDnflZOC770vVh0/preview",
+                requisitos: [
+                    "Formato debidamente llenado.",
+                    "Formato debidamente firmado."
+                ],
+                informacion: "De acuerdo al Reglamento de la Ley General para el Control del Tabaco."
+            },
+            {
+                id: 15,
+                nombre: "Visita de Verificacion",
+                icono: "🔍",
+                descripcion: "Solicitud de Visita de Verificacion",
+                pdfUrl: "https://drive.google.com/file/d/1n9zbONqFiyBU86HQEkILzOXtEvy-iYhH/preview",
+                requisitos: [
+                    "Copia del documento que acredite al Representante Legal (sí aplica).",
+                    "Copia de INE del Propietario.",
+                    "Original y 2 copias de recibo de pago (Tarifa Vigente). VIGENCIA DE COSTO DEL 01 DE FEBRERO DEL AÑO EN CURSO AL 31 DE ENERO DEL AÑO POSTERIOR."
+                ],
+                informacion: "Solicitud para Visita de Verificación Sanitaria."
+            }
         ];
 
+        // ===================== SEGURIDAD: Validación de URLs =====================
+        const DOMINIOS_PERMITIDOS = [
+            'drive.google.com',
+            'docs.google.com',
+            'youtube.com',
+            'www.youtube.com'
+        ];
+
+        /**
+         * Valida que una URL sea segura antes de usarla
+         * @param {string} url - URL a validar
+         * @returns {boolean} - True si la URL es segura
+         */
+        function esURLSegura(url) {
+            try {
+                const urlObj = new URL(url);
+                return DOMINIOS_PERMITIDOS.some(dominio => 
+                    urlObj.hostname === dominio || urlObj.hostname.endsWith('.' + dominio)
+                );
+            } catch (error) {
+                console.error('URL inválida:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Sanitiza texto para prevenir XSS
+         * @param {string} texto - Texto a sanitizar
+         * @returns {string} - Texto sanitizado
+         */
+        function sanitizarTexto(texto) {
+            const div = document.createElement('div');
+            div.textContent = texto;
+            return div.innerHTML;
+        }
+
+        // ===================== VARIABLES GLOBALES =====================
         let tramiteSeleccionado = null;
 
+        // ===================== FUNCIONES PRINCIPALES =====================
+        
+        /**
+         * Renderiza la lista de trámites con filtro opcional
+         * @param {string} filtro - Texto para filtrar trámites
+         */
         function renderTramites(filtro = '') {
             const list = document.getElementById('tramitesList');
             const tramitesFiltrados = tramites.filter(t =>
@@ -729,39 +805,87 @@
                 t.descripcion.toLowerCase().includes(filtro.toLowerCase())
             );
 
-            list.innerHTML = tramitesFiltrados.map(tramite => `
-                <div class="tramite-item ${tramiteSeleccionado?.id === tramite.id ? 'selected' : ''}"
-                     onclick="seleccionarTramite(${tramite.id})">
-                    <div class="tramite-header">
-                        <span class="tramite-icono">${tramite.icono}</span>
-                        <h3 class="tramite-nombre">${tramite.nombre}</h3>
-                    </div>
-                    <p class="tramite-desc">${tramite.descripcion}</p>
-                </div>
-            `).join('');
+            // SEGURIDAD: Limpiar contenido anterior
+            list.innerHTML = '';
+
+            // SEGURIDAD: Crear elementos de forma segura usando DOM API
+            tramitesFiltrados.forEach(tramite => {
+                const divItem = document.createElement('div');
+                divItem.className = 'tramite-item';
+                if (tramiteSeleccionado?.id === tramite.id) {
+                    divItem.classList.add('selected');
+                }
+                divItem.onclick = () => seleccionarTramite(tramite.id);
+
+                const divHeader = document.createElement('div');
+                divHeader.className = 'tramite-header';
+
+                const spanIcono = document.createElement('span');
+                spanIcono.className = 'tramite-icono';
+                spanIcono.textContent = tramite.icono;
+
+                const h3Nombre = document.createElement('h3');
+                h3Nombre.className = 'tramite-nombre';
+                h3Nombre.textContent = tramite.nombre; // SEGURIDAD: textContent previene XSS
+
+                divHeader.appendChild(spanIcono);
+                divHeader.appendChild(h3Nombre);
+
+                const pDesc = document.createElement('p');
+                pDesc.className = 'tramite-desc';
+                pDesc.textContent = tramite.descripcion; // SEGURIDAD: textContent previene XSS
+
+                divItem.appendChild(divHeader);
+                divItem.appendChild(pDesc);
+                list.appendChild(divItem);
+            });
         }
 
+        /**
+         * Selecciona un trámite y muestra su información
+         * @param {number} id - ID del trámite a seleccionar
+         */
         function seleccionarTramite(id) {
             tramiteSeleccionado = tramites.find(t => t.id === id);
+            
+            if (!tramiteSeleccionado) {
+                console.error('Trámite no encontrado');
+                return;
+            }
 
-            // Actualizar título y info
+            // SEGURIDAD: Validar URL antes de cargar
+            if (!esURLSegura(tramiteSeleccionado.pdfUrl)) {
+                alert('⚠️ Error de seguridad: URL no permitida');
+                console.error('URL bloqueada por seguridad:', tramiteSeleccionado.pdfUrl);
+                return;
+            }
+
+            // Actualizar título y info usando textContent (seguro)
             document.getElementById('previewIcon').textContent = tramiteSeleccionado.icono;
             document.getElementById('previewTitleText').textContent = tramiteSeleccionado.nombre;
             document.getElementById('previewInfo').textContent = tramiteSeleccionado.informacion;
 
-            // Actualizar iframe
+            // SEGURIDAD: Crear iframe de forma segura
             const iframeContainer = document.getElementById('iframeContainer');
-            iframeContainer.innerHTML = `
-                <iframe src="${tramiteSeleccionado.pdfUrl}" 
-                        allow="autoplay"
-                        loading="lazy"></iframe>
-            `;
+            iframeContainer.innerHTML = ''; // Limpiar
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = tramiteSeleccionado.pdfUrl;
+            iframe.setAttribute('allow', 'autoplay');
+            iframe.setAttribute('loading', 'lazy');
+            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups'); // SEGURIDAD: Sandbox
+            
+            iframeContainer.appendChild(iframe);
 
-            // Mostrar requisitos
+            // Mostrar requisitos de forma segura
             const requirementsList = document.getElementById('requirementsList');
-            requirementsList.innerHTML = tramiteSeleccionado.requisitos
-                .map(req => `<li>${req}</li>`)
-                .join('');
+            requirementsList.innerHTML = ''; // Limpiar
+            
+            tramiteSeleccionado.requisitos.forEach(req => {
+                const li = document.createElement('li');
+                li.textContent = req; // SEGURIDAD: textContent previene XSS
+                requirementsList.appendChild(li);
+            });
 
             // Mostrar botones y requisitos
             document.getElementById('actionsBar').style.display = 'flex';
@@ -771,45 +895,76 @@
             renderTramites(document.getElementById('searchInput').value);
         }
 
+        /**
+         * Descarga o abre el PDF del trámite seleccionado
+         */
         function descargarPDF() {
-            if (!tramiteSeleccionado) return;
-            
-            // Convertir URL de preview a URL de descarga
-            let downloadUrl = tramiteSeleccionado.pdfUrl;
-            
-            if (downloadUrl.includes('google.com/file')) {
-                downloadUrl = downloadUrl.replace('/preview', '/view');
-            } else if (downloadUrl.includes('youtube.com/embed')) {
-                downloadUrl = downloadUrl.replace('/embed/', '/watch?v=');
-            } else if (downloadUrl.includes('docs.google.com')) {
-                downloadUrl = downloadUrl.replace('/preview', '/edit');
+            if (!tramiteSeleccionado) {
+                alert('⚠️ Por favor selecciona un trámite primero');
+                return;
             }
             
-            window.open(downloadUrl, '_blank');
+            // SEGURIDAD: Validar URL antes de abrir
+            if (!esURLSegura(tramiteSeleccionado.pdfUrl)) {
+                alert('⚠️ Error de seguridad: No se puede abrir esta URL');
+                console.error('URL bloqueada por seguridad:', tramiteSeleccionado.pdfUrl);
+                return;
+            }
+            
+            // Convertir URL de preview a URL de descarga/visualización
+            let downloadUrl = tramiteSeleccionado.pdfUrl;
+            
+            try {
+                if (downloadUrl.includes('google.com/file')) {
+                    downloadUrl = downloadUrl.replace('/preview', '/view');
+                } else if (downloadUrl.includes('youtube.com/embed')) {
+                    downloadUrl = downloadUrl.replace('/embed/', '/watch?v=');
+                } else if (downloadUrl.includes('docs.google.com')) {
+                    downloadUrl = downloadUrl.replace('/preview', '/edit');
+                }
+                
+                // SEGURIDAD: Abrir en nueva pestaña con noopener y noreferrer
+                const nuevaVentana = window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+                
+                if (!nuevaVentana) {
+                    alert('⚠️ El navegador bloqueó la ventana emergente. Por favor permite ventanas emergentes para este sitio.');
+                }
+            } catch (error) {
+                console.error('Error al abrir documento:', error);
+                alert('⚠️ Error al intentar abrir el documento. Por favor intenta nuevamente.');
+            }
         }
 
-        // Event listeners
+        // ===================== EVENT LISTENERS =====================
+        
+        // Búsqueda en tiempo real
         document.getElementById('searchInput').addEventListener('input', function(e) {
             renderTramites(e.target.value);
         });
 
-        // Renderizar al cargar la página
+        // Cargar trámites cuando el DOM esté listo
         window.addEventListener('DOMContentLoaded', function() {
-            console.log('Cargando trámites...');
+            console.log('Sistema de trámites COEPRISS cargado correctamente');
+            console.log(`Total de trámites disponibles: ${tramites.length}`);
             renderTramites();
         });
 
-        // Renderizar inmediatamente
-        renderTramites();
+        // Renderizar inmediatamente por si DOMContentLoaded ya se ejecutó
+        if (document.readyState === 'loading') {
+            // El documento aún está cargando
+        } else {
+            // El documento ya está listo
+            renderTramites();
+        }
+
+        // ===================== SEGURIDAD: Logging de errores =====================
+        window.addEventListener('error', function(e) {
+            console.error('Error detectado:', e.message);
+            // En producción, aquí podrías enviar errores a un servicio de monitoreo
+        });
+
+        // SEGURIDAD: Prevenir ataques de Prototype Pollution
+        Object.freeze(Object.prototype);
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
