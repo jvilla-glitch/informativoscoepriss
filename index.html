@@ -3,544 +3,784 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- ===================== SEGURIDAD: Content Security Policy ===================== -->
-    <!-- Previene XSS y ataques de inyección de código -->
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self'; 
                    script-src 'self' https://pagead2.googlesyndication.com 'unsafe-inline'; 
                    frame-src https://drive.google.com https://www.youtube.com https://docs.google.com; 
-                   style-src 'self' 'unsafe-inline';
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                   font-src https://fonts.gstatic.com;
                    img-src 'self' data: https:;
                    connect-src 'self' https://pagead2.googlesyndication.com;">
-    
-    <!-- ===================== SEGURIDAD: Protección contra Clickjacking ===================== -->
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    
-    <!-- ===================== SEGURIDAD: Prevenir MIME type sniffing ===================== -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    
-    <!-- ===================== SEGURIDAD: Política de referrer ===================== -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    
     <title>Gestión de Solicitudes Estatales - COEPRISS</title>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+ 
     <style>
+        :root {
+            --gris-oscuro: #2c3e50;
+            --gris-principal: #34495e;
+            --gris-medio: #576574;
+            --gris-claro: #95a5a6;
+            --gris-muy-claro: #bdc3c7;
+            --gris-fondo: #ecf0f1;
+            --gris-fondo-claro: #f8f9fa;
+            --azul-institucional: #3498db;
+            --azul-oscuro: #2980b9;
+            --verde-institucional: #27ae60;
+            --naranja-institucional: #e67e22;
+            --rojo-institucional: #c0392b;
+            --blanco: #ffffff;
+            --texto-oscuro: #2c3e50;
+            --texto-medio: #576574;
+            --border-color: #bdc3c7;
+            --sombra-suave: rgba(44, 62, 80, 0.08);
+            --sombra-media: rgba(44, 62, 80, 0.15);
+            --sombra-fuerte: rgba(44, 62, 80, 0.25);
+            --header-height: 70px;
+        }
+ 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+ 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #8B1538 0%, #5D0E29 50%, #C41E3A 100%);
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--gris-fondo);
+            color: var(--texto-oscuro);
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
         }
-
-        .background-shapes {
-            position: fixed;
+ 
+        /* ===== TOP BAR ===== */
+        .topbar {
+            background: var(--gris-oscuro);
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 24px;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--gris-muy-claro);
+            letter-spacing: 0.3px;
+        }
+ 
+        .topbar-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+ 
+        .topbar-item svg {
+            opacity: 0.7;
+        }
+ 
+        /* ===== HEADER ===== */
+        header {
+            background: var(--gris-principal);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            box-shadow: 0 2px 8px var(--sombra-fuerte);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            z-index: 100;
+            border-bottom: 3px solid var(--azul-institucional);
+        }
+ 
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--azul-institucional);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+ 
+        .header-text h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.45em;
+            font-weight: 600;
+            color: var(--blanco);
+            letter-spacing: 0.5px;
+        }
+ 
+        .header-text p {
+            font-size: 12.5px;
+            color: var(--gris-claro);
+            font-weight: 300;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+ 
+        .header-divider {
+            width: 1px;
+            height: 30px;
+            background: rgba(255,255,255,0.15);
+            margin: 0 8px;
+        }
+ 
+        .header-badge {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.4);
+            color: #74b9e8;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+ 
+        /* ===== MAIN LAYOUT ===== */
+        .page-wrapper {
+            display: flex;
+            flex: 1;
             overflow: hidden;
-            z-index: 0;
+            height: calc(100vh - var(--header-height) - 36px - 44px);
+        }
+ 
+        /* ===== SIDEBAR / LISTA ===== */
+        .sidebar {
+            width: 380px;
+            flex-shrink: 0;
+            background: var(--blanco);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 8px var(--sombra-suave);
+        }
+ 
+        .sidebar-header {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--gris-fondo);
+            background: var(--gris-fondo-claro);
+        }
+ 
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gris-medio);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+ 
+        .sidebar-title::before {
+            content: '';
+            display: block;
+            width: 3px;
+            height: 12px;
+            background: var(--azul-institucional);
+            border-radius: 2px;
+        }
+ 
+        .search-wrapper {
+            position: relative;
+        }
+ 
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gris-claro);
             pointer-events: none;
         }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .shape:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .shape:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            top: 50%;
-            right: -50px;
-            animation-delay: 4s;
-        }
-
-        .shape:nth-child(3) {
-            width: 400px;
-            height: 400px;
-            bottom: -150px;
-            left: 30%;
-            animation-delay: 2s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            padding: 30px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            animation: slideDown 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            color: white;
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            font-weight: 700;
-        }
-
-        header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1em;
-            font-weight: 300;
-        }
-
-        .search-box {
-            margin-bottom: 25px;
-            animation: fadeIn 1s ease-out 0.3s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+ 
         #searchInput {
             width: 100%;
-            max-width: 100%;
-            padding: 18px 25px;
-            font-size: 1.1em;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: block;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 9px 12px 9px 34px;
+            font-size: 15px;
+            font-family: 'Source Sans 3', sans-serif;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--blanco);
+            color: var(--texto-oscuro);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
+ 
         #searchInput:focus {
             outline: none;
-            border-color: #8B1538;
-            box-shadow: 0 8px 30px rgba(139, 21, 56, 0.3);
+            border-color: var(--azul-institucional);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.12);
         }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            gap: 25px;
-            height: calc(100vh - 280px);
+ 
+        #searchInput::placeholder {
+            color: var(--gris-claro);
         }
-
+ 
+        .tramites-count {
+            font-size: 13px;
+            color: var(--gris-claro);
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+ 
         .tramites-list {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            flex: 1;
             overflow-y: auto;
-            animation: slideInLeft 0.6s ease-out;
-            height: 100%;
+            padding: 8px 0;
         }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .tramites-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .tramites-list::-webkit-scrollbar-track {
-            background: rgba(139, 21, 56, 0.1);
-            border-radius: 10px;
-        }
-
-        .tramites-list::-webkit-scrollbar-thumb {
-            background: #8B1538;
-            border-radius: 10px;
-        }
-
+ 
+        .tramites-list::-webkit-scrollbar { width: 5px; }
+        .tramites-list::-webkit-scrollbar-track { background: transparent; }
+        .tramites-list::-webkit-scrollbar-thumb { background: var(--gris-muy-claro); border-radius: 4px; }
+        .tramites-list::-webkit-scrollbar-thumb:hover { background: var(--gris-claro); }
+ 
         .tramite-item {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
+            padding: 12px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .tramite-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(139, 21, 56, 0.2);
-            border-color: rgba(139, 21, 56, 0.3);
-        }
-
-        .tramite-item.selected {
-            background: linear-gradient(135deg, #8B1538 0%, #5D0E29 100%);
-            color: white;
-            border-color: #8B1538;
-            transform: translateX(5px);
-            box-shadow: 0 8px 25px rgba(139, 21, 56, 0.4);
-        }
-
-        .tramite-item.selected .tramite-nombre,
-        .tramite-item.selected .tramite-desc {
-            color: white;
-        }
-
-        .tramite-header {
+            transition: background 0.15s, border-left-color 0.15s;
+            border-left: 3px solid transparent;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 8px;
+            align-items: flex-start;
+            gap: 12px;
         }
-
+ 
+        .tramite-item:hover {
+            background: var(--gris-fondo-claro);
+            border-left-color: var(--gris-muy-claro);
+        }
+ 
+        .tramite-item.selected {
+            background: #ebf5fb;
+            border-left-color: var(--azul-institucional);
+        }
+ 
         .tramite-icono {
-            font-size: 2em;
+            font-size: 1.4em;
             flex-shrink: 0;
+            margin-top: 1px;
+            width: 28px;
+            text-align: center;
         }
-
+ 
+        .tramite-content {
+            flex: 1;
+            min-width: 0;
+        }
+ 
         .tramite-nombre {
-            font-size: 1.05em;
+            font-size: 15px;
             font-weight: 600;
-            color: #2d3748;
+            color: var(--texto-oscuro);
             line-height: 1.3;
+            margin-bottom: 3px;
         }
-
+ 
+        .tramite-item.selected .tramite-nombre {
+            color: var(--azul-oscuro);
+        }
+ 
         .tramite-desc {
-            font-size: 0.88em;
-            color: #4a5568;
+            font-size: 13px;
+            color: var(--gris-claro);
             line-height: 1.4;
-            margin-left: 60px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .preview-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+ 
+        .tramite-arrow {
+            color: var(--gris-muy-claro);
+            flex-shrink: 0;
+            align-self: center;
+            transition: color 0.15s;
+        }
+ 
+        .tramite-item.selected .tramite-arrow,
+        .tramite-item:hover .tramite-arrow {
+            color: var(--azul-institucional);
+        }
+ 
+        /* ===== CONTENT PANEL ===== */
+        .content-panel {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            animation: slideInRight 0.6s ease-out;
-            height: 100%;
-            overflow-y: auto;
+            overflow: hidden;
+            background: var(--gris-fondo);
         }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .preview-panel::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .preview-panel::-webkit-scrollbar-track {
-            background: rgba(139, 21, 56, 0.1);
-            border-radius: 10px;
-        }
-
-        .preview-panel::-webkit-scrollbar-thumb {
-            background: #8B1538;
-            border-radius: 10px;
-        }
-
-        .preview-header {
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-
-        .preview-title {
-            color: #8B1538;
-            font-size: 1.6em;
-            font-weight: 700;
-            margin-bottom: 10px;
+ 
+        .content-toolbar {
+            background: var(--blanco);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
         }
-
-        .preview-info {
-            color: #4a5568;
-            font-size: 1em;
-            line-height: 1.6;
+ 
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gris-claro);
         }
-
-        .iframe-container {
+ 
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+ 
+        .breadcrumb-item.active {
+            color: var(--texto-oscuro);
+            font-weight: 600;
+        }
+ 
+        .breadcrumb-sep {
+            color: var(--gris-muy-claro);
+        }
+ 
+        .toolbar-actions {
+            display: flex;
+            gap: 8px;
+        }
+ 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            letter-spacing: 0.2px;
+        }
+ 
+        .btn-primary {
+            background: var(--azul-institucional);
+            color: var(--blanco);
+            box-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
+        }
+ 
+        .btn-primary:hover {
+            background: var(--azul-oscuro);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+        }
+ 
+        .btn-outline {
+            background: var(--blanco);
+            color: var(--texto-medio);
+            border: 1px solid var(--border-color);
+        }
+ 
+        .btn-outline:hover {
+            background: var(--gris-fondo-claro);
+            border-color: var(--gris-claro);
+        }
+ 
+        .content-body {
             flex: 1;
-            background: white;
-            border-radius: 15px;
+            display: grid;
+            grid-template-rows: 1fr auto;
             overflow: hidden;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            min-height: 500px;
-            margin-bottom: 20px;
+            padding: 20px 24px;
+            gap: 16px;
         }
-
-        .iframe-container iframe {
+ 
+        /* ===== PREVIEW AREA ===== */
+        .preview-area {
+            background: var(--blanco);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px var(--sombra-suave);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+ 
+        .preview-tab-bar {
+            background: var(--gris-fondo-claro);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-shrink: 0;
+        }
+ 
+        .preview-tab {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gris-claro);
+            border-bottom: 2px solid transparent;
+            cursor: default;
+        }
+ 
+        .preview-tab.active {
+            color: var(--azul-institucional);
+            border-bottom-color: var(--azul-institucional);
+        }
+ 
+        .preview-tab-info {
+            margin-left: auto;
+            font-size: 13px;
+            color: var(--gris-claro);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+ 
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--verde-institucional);
+        }
+ 
+        .iframe-wrapper {
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+ 
+        .iframe-wrapper iframe {
             width: 100%;
             height: 100%;
             border: none;
-            min-height: 500px;
+            display: block;
         }
-
-        .no-preview {
+ 
+        .empty-state {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            color: #718096;
-            font-size: 1.2em;
-            text-align: center;
             padding: 40px;
-            min-height: 500px;
+            color: var(--gris-claro);
+            text-align: center;
+            min-height: 300px;
         }
-
-        .no-preview-icon {
-            font-size: 5em;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .actions-bar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            font-size: 1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
+ 
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gris-fondo);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
             justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #8B1538 0%, #5D0E29 100%);
-            color: white;
-            flex: 1;
-            box-shadow: 0 4px 15px rgba(139, 21, 56, 0.4);
+ 
+        .empty-state h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--gris-medio);
+            margin-bottom: 6px;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 21, 56, 0.6);
+ 
+        .empty-state p {
+            font-size: 15px;
+            color: var(--gris-claro);
+            max-width: 280px;
+            line-height: 1.5;
         }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .requirements-section {
-            padding: 20px;
-            background: rgba(139, 21, 56, 0.05);
-            border-radius: 15px;
-            border-left: 4px solid #8B1538;
+ 
+        /* ===== INFO PANEL ===== */
+        .info-panel {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
             flex-shrink: 0;
         }
-
-        .requirements-title {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
+ 
+        .info-panel.visible {
+            display: grid;
+        }
+ 
+        .info-card {
+            background: var(--blanco);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 1px 4px var(--sombra-suave);
+        }
+ 
+        .info-card-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gris-medio);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
-
+ 
+        .info-card-title::before {
+            content: '';
+            display: block;
+            width: 3px;
+            height: 11px;
+            background: var(--azul-institucional);
+            border-radius: 2px;
+        }
+ 
+        .info-description {
+            font-size: 15px;
+            color: var(--texto-medio);
+            line-height: 1.6;
+        }
+ 
         .requirements-list {
             list-style: none;
             padding: 0;
         }
-
+ 
         .requirements-list li {
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            background: white;
-            border-radius: 8px;
-            color: #2d3748;
+            font-size: 14px;
+            color: var(--texto-medio);
+            padding: 6px 0 6px 16px;
+            border-bottom: 1px solid var(--gris-fondo);
             line-height: 1.5;
-            font-size: 0.95em;
+            position: relative;
         }
-
+ 
+        .requirements-list li:last-child {
+            border-bottom: none;
+        }
+ 
+        .requirements-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 13px;
+            width: 5px;
+            height: 5px;
+            background: var(--azul-institucional);
+            border-radius: 50%;
+        }
+ 
+        /* ===== FOOTER ===== */
         footer {
-            text-align: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-top: 30px;
+            background: var(--gris-oscuro);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
         }
-
+ 
         footer p {
-            color: white;
-            font-size: 0.9em;
+            color: var(--gris-claro);
+            font-size: 13px;
         }
-
-        @media (max-width: 1200px) {
-            .main-content {
+ 
+        footer .footer-brand {
+            color: rgba(255,255,255,0.4);
+            font-size: 13px;
+            font-style: italic;
+        }
+ 
+        /* ===== SCROLLBAR GLOBAL ===== */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gris-muy-claro); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gris-claro); }
+ 
+        /* ===== EMPTY TRAMITES ===== */
+        .no-results {
+            padding: 32px 20px;
+            text-align: center;
+            color: var(--gris-claro);
+            font-size: 13px;
+        }
+ 
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 960px) {
+            .page-wrapper {
+                flex-direction: column;
+                height: auto;
+                overflow: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 320px;
+            }
+            .content-body {
+                grid-template-rows: auto auto;
+            }
+            .info-panel.visible {
                 grid-template-columns: 1fr;
-                height: auto;
             }
-
-            .tramites-list {
-                max-height: 400px;
-                height: auto;
-            }
-
-            .preview-panel {
-                height: auto;
-                min-height: 600px;
+            .iframe-wrapper {
+                min-height: 400px;
             }
         }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 1.6em; }
-            header p { font-size: 0.95em; }
-            .preview-title { font-size: 1.4em; }
-            .tramite-nombre { font-size: 1em; }
+ 
+        @media (max-width: 600px) {
+            .topbar { display: none; }
+            .header-text h1 { font-size: 1.05em; }
+            .content-toolbar { padding: 10px 14px; }
+            .content-body { padding: 12px; }
         }
     </style>
-    
-    <!-- ===================== SEGURIDAD: Google AdSense con crossorigin ===================== -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3617160493965334"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3617160493965334" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- ===================== SEGURIDAD: Forzar HTTPS ===================== -->
+ 
     <script>
-        // Redirigir a HTTPS si no estamos en localhost
         if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
             location.replace('https:' + window.location.href.substring(window.location.protocol.length));
         }
     </script>
-
-    <div class="background-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <div class="container">
-        <header>
-            <h1>🏛️ Centro Integral de Servicios COEPRISS</h1>
-            <p>Sistema de Gestión de Solicitudes e Información</p>
-        </header>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Buscar trámite...">
+ 
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="topbar-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="clockDisplay">--:--:-- --</span>
         </div>
-
-        <div class="main-content">
-            <div class="tramites-list" id="tramitesList">
-                <!-- Los trámites se cargarán aquí -->
+        <div class="topbar-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>COEPRISS Sinaloa</span>
+        </div>
+        <div class="topbar-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Salir</span>
+        </div>
+    </div>
+ 
+    <!-- HEADER -->
+    <header>
+        <div class="header-icon">🏛️</div>
+        <div class="header-text">
+            <h1>COEPRISS — Centro Integral de Servicios</h1>
+            <p>Sistema de Gestión de Solicitudes e Información</p>
+        </div>
+        <div class="header-divider"></div>
+        <span class="header-badge">SINALOA</span>
+    </header>
+ 
+    <!-- PAGE WRAPPER -->
+    <div class="page-wrapper">
+ 
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Trámites Disponibles</div>
+                <div class="search-wrapper">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="searchInput" placeholder="Buscar trámite...">
+                </div>
+                <div class="tramites-count" id="tramitesCount">15 trámites disponibles</div>
             </div>
-
-            <div class="preview-panel">
-                <div class="preview-header">
-                    <h2 class="preview-title">
-                        <span id="previewIcon">📄</span>
-                        <span id="previewTitleText">Selecciona un trámite</span>
-                    </h2>
-                    <p class="preview-info" id="previewInfo">
-                        Haz clic en cualquier trámite de la lista para ver los detalles y la vista previa del documento.
-                    </p>
-                </div>
-
-                <div class="iframe-container" id="iframeContainer">
-                    <div class="no-preview">
-                        <div class="no-preview-icon">📋</div>
-                        <p>Selecciona un trámite para ver la vista previa</p>
+            <div class="tramites-list" id="tramitesList"></div>
+        </aside>
+ 
+        <!-- CONTENT PANEL -->
+        <main class="content-panel">
+ 
+            <!-- TOOLBAR -->
+            <div class="content-toolbar">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>Inicio</span>
                     </div>
+                    <span class="breadcrumb-sep">›</span>
+                    <div class="breadcrumb-item active" id="breadcrumbActive">Seleccione un trámite</div>
                 </div>
-
-                <div class="actions-bar" id="actionsBar" style="display: none;">
-                    <button class="btn btn-primary" id="downloadBtn" onclick="descargarPDF()">
-                        📥 Descargar/Ver Documento
+                <div class="toolbar-actions" id="toolbarActions" style="display:none;">
+                    <button class="btn btn-outline" onclick="descargarPDF()">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Abrir Documento
                     </button>
                 </div>
-
-                <div class="requirements-section" id="requirementsSection" style="display: none;">
-                    <h3 class="requirements-title">📝 Requisitos Necesarios</h3>
-                    <ul class="requirements-list" id="requirementsList"></ul>
-                </div>
             </div>
-        </div>
-
-        <footer>
-            <p>© 2025 COEPRISS Sinaloa | Comisión Estatal para la Protección contra Riesgos Sanitarios</p>
-            <p>VTECHSOLUTIONS, <i>Ideas que inspiran, resultados que trascienden</i></p>
-        </footer>
+ 
+            <!-- CONTENT BODY -->
+            <div class="content-body">
+ 
+                <!-- PREVIEW AREA -->
+                <div class="preview-area">
+                    <div class="preview-tab-bar">
+                        <div class="preview-tab active">Vista Previa del Documento</div>
+                        <div class="preview-tab-info" id="previewTabInfo" style="display:none;">
+                            <span class="status-dot"></span>
+                            <span id="previewTabLabel">Documento cargado</span>
+                        </div>
+                    </div>
+ 
+                    <div class="iframe-wrapper" id="iframeWrapper">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <h3>Sin documento seleccionado</h3>
+                            <p>Seleccione un trámite del panel izquierdo para visualizar el documento correspondiente.</p>
+                        </div>
+                    </div>
+                </div>
+ 
+                <!-- INFO PANEL -->
+                <div class="info-panel" id="infoPanel">
+                    <div class="info-card">
+                        <div class="info-card-title">Información General</div>
+                        <p class="info-description" id="infoDescription">—</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-title">Requisitos Necesarios</div>
+                        <ul class="requirements-list" id="requirementsList"></ul>
+                    </div>
+                </div>
+ 
+            </div>
+        </main>
+ 
     </div>
-
+ 
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2025 COEPRISS Sinaloa — Comisión Estatal para la Protección contra Riesgos Sanitarios</p>
+        <span class="footer-brand">VTECHSOLUTIONS — Ideas que inspiran, resultados que trascienden</span>
+    </footer>
+ 
     <script>
-        // ===================== CONFIGURACIÓN DE DATOS =====================
+        // ===== CLOCK =====
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+            const ampm = h >= 12 ? 'p.m.' : 'a.m.';
+            h = h % 12 || 12;
+            document.getElementById('clockDisplay').textContent =
+                `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+ 
+        // ===== DATA =====
         const tramites = [
             {
                 id: 1,
@@ -550,7 +790,7 @@
                 pdfUrl: "https://drive.google.com/file/d/1VaYUtJYF_bVNKD86JWtHRPEJiS7z5M3_/preview",
                 requisitos: [
                     "Solicitud (Original y Copia).",
-                    "Pago por Persona (Tarifa Vigente) (original y copia) VIGENCIA DE COSTO DEL 01 DE FEBRERO DEL AÑO EN CURSO AL 31 DE ENERO DEL AÑO POSTERIOR.",
+                    "Pago por Persona (Tarifa Vigente) (original y copia). VIGENCIA DE COSTO DEL 01 DE FEBRERO DEL AÑO EN CURSO AL 31 DE ENERO DEL AÑO POSTERIOR.",
                     "Realizar pago en: BANORTE: N° Cuenta 1102365725, Clabe: 072730011023657251.",
                     "*Si realiza transferencia bancaria y maneja cuenta de BBVA favor de utilizar la clabe interbancaria.",
                     "NOTA: PARA FACTURACIÓN enviar datos al correo: facturacion.coepriss@sinaloa.gob.mx.",
@@ -579,7 +819,7 @@
                 descripcion: "Certificación para realizar peritajes en construcción",
                 pdfUrl: "https://drive.google.com/file/d/1l4m9RL4AQowER5IvOWrCX-18UIKAfvha/preview",
                 requisitos: [
-                    "Carta de Solicitud dirigida al Comisionado Estatal para la Protección Contra Riesgos Sanitarios.",
+                    "Carta de Solicitud dirigida al Comisionado Estatal.",
                     "Solicitud COEPRISS.",
                     "(1) Una Copia Fotográfica del Título por los dos lados.",
                     "(1) Una Copia Fotográfica de la Cédula Profesional por ambos lados.",
@@ -645,7 +885,7 @@
             },
             {
                 id: 8,
-                nombre: "Examen de Responsable Sanitario para Aplicador de Plaguicidas",
+                nombre: "Examen Responsable Sanitario — Plaguicidas",
                 icono: "🌾",
                 descripcion: "Certificación para aplicación profesional de plaguicidas",
                 pdfUrl: "https://drive.google.com/file/d/1qD7BtdCz2omu09gp-pfrw1Njh4o_hm1w/preview",
@@ -660,7 +900,7 @@
             },
             {
                 id: 9,
-                nombre: "Aviso de Funcionamiento de Productos y Servicios",
+                nombre: "Aviso de Funcionamiento — Productos y Servicios",
                 icono: "📋",
                 descripcion: "Notificación de inicio de operaciones",
                 pdfUrl: "https://www.youtube.com/embed/bQ_viT5_gHM",
@@ -691,7 +931,7 @@
             },
             {
                 id: 11,
-                nombre: "Formato de Avisos, Autorizaciones y Certificados",
+                nombre: "Avisos, Autorizaciones y Certificados",
                 icono: "📜",
                 descripcion: "Licencias para farmacias, fumigación y servicios regulados",
                 pdfUrl: "https://docs.google.com/document/d/1XaHhFy9VO7S6jU0To14GCA-LZn7-Qlt1/preview",
@@ -702,9 +942,9 @@
             },
             {
                 id: 12,
-                nombre: "Tabulador de precios de Trámites Estatales",
+                nombre: "Tabulador de Precios — Trámites Estatales",
                 icono: "💰",
-                descripcion: "Costo de Trámites",
+                descripcion: "Costos oficiales de trámites",
                 pdfUrl: "https://drive.google.com/file/d/1HfCEof3vPD4GKcDgiSIsWERy85T_ztoR/preview",
                 requisitos: [
                     "Consultar el tabulador oficial para conocer las tarifas vigentes."
@@ -720,17 +960,17 @@
                 requisitos: [
                     "Identificación oficial del denunciante (opcional si desea mantener el anonimato).",
                     "Descripción detallada de los hechos.",
-                    "Dirección exacta del establecimiento o lugar donde ocurren las irregularidades.",
+                    "Dirección exacta del establecimiento.",
                     "Evidencias fotográficas o documentales (si se cuenta con ellas).",
                     "Datos de contacto para seguimiento (opcional)."
                 ],
-                informacion: "Sistema para reportar irregularidades sanitarias en establecimientos o situaciones que representen un riesgo para la salud pública. Las denuncias pueden ser anónimas y serán atendidas por personal de COEPRISS."
+                informacion: "Sistema para reportar irregularidades sanitarias. Las denuncias pueden ser anónimas y serán atendidas por personal de COEPRISS."
             },
             {
                 id: 14,
-                nombre: "AutoEvaluacion edificio libre de humo de tabaco",
+                nombre: "Autoevaluación — Edificio Libre de Humo",
                 icono: "🚭",
-                descripcion: "formato de Autoevaluacion",
+                descripcion: "Formato de Autoevaluación antitabaco",
                 pdfUrl: "https://drive.google.com/file/d/1x8g6ohQJ5bRaY44L1nDnflZOC770vVh0/preview",
                 requisitos: [
                     "Formato debidamente llenado.",
@@ -740,234 +980,161 @@
             },
             {
                 id: 15,
-                nombre: "Visita de Verificacion",
+                nombre: "Visita de Verificación",
                 icono: "🔍",
-                descripcion: "Solicitud de Visita de Verificacion",
+                descripcion: "Solicitud de Visita de Verificación Sanitaria",
                 pdfUrl: "https://drive.google.com/file/d/1n9zbONqFiyBU86HQEkILzOXtEvy-iYhH/preview",
                 requisitos: [
-                    "Copia del documento que acredite al Representante Legal (sí aplica).",
+                    "Copia del documento que acredite al Representante Legal (si aplica).",
                     "Copia de INE del Propietario.",
                     "Original y 2 copias de recibo de pago (Tarifa Vigente). VIGENCIA DE COSTO DEL 01 DE FEBRERO DEL AÑO EN CURSO AL 31 DE ENERO DEL AÑO POSTERIOR."
                 ],
                 informacion: "Solicitud para Visita de Verificación Sanitaria."
             }
         ];
-
-        // ===================== SEGURIDAD: Validación de URLs =====================
-        const DOMINIOS_PERMITIDOS = [
-            'drive.google.com',
-            'docs.google.com',
-            'youtube.com',
-            'www.youtube.com'
-        ];
-
-        /**
-         * Valida que una URL sea segura antes de usarla
-         * @param {string} url - URL a validar
-         * @returns {boolean} - True si la URL es segura
-         */
+ 
+        // ===== SECURITY =====
+        const DOMINIOS_PERMITIDOS = ['drive.google.com', 'docs.google.com', 'youtube.com', 'www.youtube.com'];
+ 
         function esURLSegura(url) {
             try {
-                const urlObj = new URL(url);
-                return DOMINIOS_PERMITIDOS.some(dominio => 
-                    urlObj.hostname === dominio || urlObj.hostname.endsWith('.' + dominio)
-                );
-            } catch (error) {
-                console.error('URL inválida:', error);
-                return false;
-            }
+                const u = new URL(url);
+                return DOMINIOS_PERMITIDOS.some(d => u.hostname === d || u.hostname.endsWith('.' + d));
+            } catch { return false; }
         }
-
-        /**
-         * Sanitiza texto para prevenir XSS
-         * @param {string} texto - Texto a sanitizar
-         * @returns {string} - Texto sanitizado
-         */
-        function sanitizarTexto(texto) {
-            const div = document.createElement('div');
-            div.textContent = texto;
-            return div.innerHTML;
-        }
-
-        // ===================== VARIABLES GLOBALES =====================
+ 
+        // ===== STATE =====
         let tramiteSeleccionado = null;
-
-        // ===================== FUNCIONES PRINCIPALES =====================
-        
-        /**
-         * Renderiza la lista de trámites con filtro opcional
-         * @param {string} filtro - Texto para filtrar trámites
-         */
+ 
+        // ===== RENDER LIST =====
         function renderTramites(filtro = '') {
             const list = document.getElementById('tramitesList');
-            const tramitesFiltrados = tramites.filter(t =>
+            const filtered = tramites.filter(t =>
                 t.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
                 t.descripcion.toLowerCase().includes(filtro.toLowerCase())
             );
-
-            // SEGURIDAD: Limpiar contenido anterior
+ 
             list.innerHTML = '';
-
-            // SEGURIDAD: Crear elementos de forma segura usando DOM API
-            tramitesFiltrados.forEach(tramite => {
-                const divItem = document.createElement('div');
-                divItem.className = 'tramite-item';
-                if (tramiteSeleccionado?.id === tramite.id) {
-                    divItem.classList.add('selected');
-                }
-                divItem.onclick = () => seleccionarTramite(tramite.id);
-
-                const divHeader = document.createElement('div');
-                divHeader.className = 'tramite-header';
-
-                const spanIcono = document.createElement('span');
-                spanIcono.className = 'tramite-icono';
-                spanIcono.textContent = tramite.icono;
-
-                const h3Nombre = document.createElement('h3');
-                h3Nombre.className = 'tramite-nombre';
-                h3Nombre.textContent = tramite.nombre; // SEGURIDAD: textContent previene XSS
-
-                divHeader.appendChild(spanIcono);
-                divHeader.appendChild(h3Nombre);
-
-                const pDesc = document.createElement('p');
-                pDesc.className = 'tramite-desc';
-                pDesc.textContent = tramite.descripcion; // SEGURIDAD: textContent previene XSS
-
-                divItem.appendChild(divHeader);
-                divItem.appendChild(pDesc);
-                list.appendChild(divItem);
+            document.getElementById('tramitesCount').textContent =
+                `${filtered.length} trámite${filtered.length !== 1 ? 's' : ''} disponible${filtered.length !== 1 ? 's' : ''}`;
+ 
+            if (!filtered.length) {
+                const div = document.createElement('div');
+                div.className = 'no-results';
+                div.textContent = 'No se encontraron trámites con ese criterio.';
+                list.appendChild(div);
+                return;
+            }
+ 
+            filtered.forEach(tramite => {
+                const item = document.createElement('div');
+                item.className = 'tramite-item' + (tramiteSeleccionado?.id === tramite.id ? ' selected' : '');
+                item.onclick = () => seleccionarTramite(tramite.id);
+ 
+                const icono = document.createElement('span');
+                icono.className = 'tramite-icono';
+                icono.textContent = tramite.icono;
+ 
+                const content = document.createElement('div');
+                content.className = 'tramite-content';
+ 
+                const nombre = document.createElement('div');
+                nombre.className = 'tramite-nombre';
+                nombre.textContent = tramite.nombre;
+ 
+                const desc = document.createElement('div');
+                desc.className = 'tramite-desc';
+                desc.textContent = tramite.descripcion;
+ 
+                content.appendChild(nombre);
+                content.appendChild(desc);
+ 
+                const arrow = document.createElement('span');
+                arrow.className = 'tramite-arrow';
+                arrow.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>`;
+ 
+                item.appendChild(icono);
+                item.appendChild(content);
+                item.appendChild(arrow);
+                list.appendChild(item);
             });
         }
-
-        /**
-         * Selecciona un trámite y muestra su información
-         * @param {number} id - ID del trámite a seleccionar
-         */
+ 
+        // ===== SELECT =====
         function seleccionarTramite(id) {
             tramiteSeleccionado = tramites.find(t => t.id === id);
-            
-            if (!tramiteSeleccionado) {
-                console.error('Trámite no encontrado');
-                return;
-            }
-
-            // SEGURIDAD: Validar URL antes de cargar
+            if (!tramiteSeleccionado) return;
+ 
             if (!esURLSegura(tramiteSeleccionado.pdfUrl)) {
                 alert('⚠️ Error de seguridad: URL no permitida');
-                console.error('URL bloqueada por seguridad:', tramiteSeleccionado.pdfUrl);
                 return;
             }
-
-            // Actualizar título y info usando textContent (seguro)
-            document.getElementById('previewIcon').textContent = tramiteSeleccionado.icono;
-            document.getElementById('previewTitleText').textContent = tramiteSeleccionado.nombre;
-            document.getElementById('previewInfo').textContent = tramiteSeleccionado.informacion;
-
-            // SEGURIDAD: Crear iframe de forma segura
-            const iframeContainer = document.getElementById('iframeContainer');
-            iframeContainer.innerHTML = ''; // Limpiar
-            
+ 
+            // Breadcrumb
+            document.getElementById('breadcrumbActive').textContent = tramiteSeleccionado.nombre;
+ 
+            // Toolbar
+            document.getElementById('toolbarActions').style.display = 'flex';
+ 
+            // Preview tab info
+            document.getElementById('previewTabInfo').style.display = 'flex';
+            document.getElementById('previewTabLabel').textContent = tramiteSeleccionado.nombre;
+ 
+            // iframe
+            const wrapper = document.getElementById('iframeWrapper');
+            wrapper.innerHTML = '';
             const iframe = document.createElement('iframe');
             iframe.src = tramiteSeleccionado.pdfUrl;
             iframe.setAttribute('allow', 'autoplay');
             iframe.setAttribute('loading', 'lazy');
-            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups'); // SEGURIDAD: Sandbox
-            
-            iframeContainer.appendChild(iframe);
-
-            // Mostrar requisitos de forma segura
-            const requirementsList = document.getElementById('requirementsList');
-            requirementsList.innerHTML = ''; // Limpiar
-            
+            iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+            wrapper.appendChild(iframe);
+ 
+            // Info
+            document.getElementById('infoDescription').textContent = tramiteSeleccionado.informacion;
+ 
+            const reqList = document.getElementById('requirementsList');
+            reqList.innerHTML = '';
             tramiteSeleccionado.requisitos.forEach(req => {
                 const li = document.createElement('li');
-                li.textContent = req; // SEGURIDAD: textContent previene XSS
-                requirementsList.appendChild(li);
+                li.textContent = req;
+                reqList.appendChild(li);
             });
-
-            // Mostrar botones y requisitos
-            document.getElementById('actionsBar').style.display = 'flex';
-            document.getElementById('requirementsSection').style.display = 'block';
-
-            // Actualizar lista
+ 
+            document.getElementById('infoPanel').classList.add('visible');
+ 
             renderTramites(document.getElementById('searchInput').value);
         }
-
-        /**
-         * Descarga o abre el PDF del trámite seleccionado
-         */
+ 
+        // ===== DOWNLOAD =====
         function descargarPDF() {
-            if (!tramiteSeleccionado) {
-                alert('⚠️ Por favor selecciona un trámite primero');
-                return;
-            }
-            
-            // SEGURIDAD: Validar URL antes de abrir
+            if (!tramiteSeleccionado) return;
             if (!esURLSegura(tramiteSeleccionado.pdfUrl)) {
                 alert('⚠️ Error de seguridad: No se puede abrir esta URL');
-                console.error('URL bloqueada por seguridad:', tramiteSeleccionado.pdfUrl);
                 return;
             }
-            
-            // Convertir URL de preview a URL de descarga/visualización
-            let downloadUrl = tramiteSeleccionado.pdfUrl;
-            
+            let url = tramiteSeleccionado.pdfUrl;
             try {
-                if (downloadUrl.includes('google.com/file')) {
-                    downloadUrl = downloadUrl.replace('/preview', '/view');
-                } else if (downloadUrl.includes('youtube.com/embed')) {
-                    downloadUrl = downloadUrl.replace('/embed/', '/watch?v=');
-                } else if (downloadUrl.includes('docs.google.com')) {
-                    downloadUrl = downloadUrl.replace('/preview', '/edit');
-                }
-                
-                // SEGURIDAD: Abrir en nueva pestaña con noopener y noreferrer
-                const nuevaVentana = window.open(downloadUrl, '_blank', 'noopener,noreferrer');
-                
-                if (!nuevaVentana) {
-                    alert('⚠️ El navegador bloqueó la ventana emergente. Por favor permite ventanas emergentes para este sitio.');
-                }
-            } catch (error) {
-                console.error('Error al abrir documento:', error);
-                alert('⚠️ Error al intentar abrir el documento. Por favor intenta nuevamente.');
+                if (url.includes('google.com/file')) url = url.replace('/preview', '/view');
+                else if (url.includes('youtube.com/embed')) url = url.replace('/embed/', '/watch?v=');
+                else if (url.includes('docs.google.com')) url = url.replace('/preview', '/edit');
+                const w = window.open(url, '_blank', 'noopener,noreferrer');
+                if (!w) alert('⚠️ El navegador bloqueó la ventana emergente. Permite ventanas emergentes para este sitio.');
+            } catch (e) {
+                console.error('Error al abrir documento:', e);
             }
         }
-
-        // ===================== EVENT LISTENERS =====================
-        
-        // Búsqueda en tiempo real
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            renderTramites(e.target.value);
-        });
-
-        // Cargar trámites cuando el DOM esté listo
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('Sistema de trámites COEPRISS cargado correctamente');
-            console.log(`Total de trámites disponibles: ${tramites.length}`);
-            renderTramites();
-        });
-
-        // Renderizar inmediatamente por si DOMContentLoaded ya se ejecutó
-        if (document.readyState === 'loading') {
-            // El documento aún está cargando
-        } else {
-            // El documento ya está listo
-            renderTramites();
-        }
-
-        // ===================== SEGURIDAD: Logging de errores =====================
-        window.addEventListener('error', function(e) {
-            console.error('Error detectado:', e.message);
-            // En producción, aquí podrías enviar errores a un servicio de monitoreo
-        });
-
-        // SEGURIDAD: Prevenir ataques de Prototype Pollution
+ 
+        // ===== SEARCH =====
+        document.getElementById('searchInput').addEventListener('input', e => renderTramites(e.target.value));
+ 
+        // ===== INIT =====
+        window.addEventListener('DOMContentLoaded', () => renderTramites());
+        if (document.readyState !== 'loading') renderTramites();
+ 
+        window.addEventListener('error', e => console.error('Error:', e.message));
         Object.freeze(Object.prototype);
     </script>
 </body>
 </html>
-
-
 
